@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import './Chat.css';
 
+const API_URL = 'http://127.0.0.1:5000/chat'
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
+ //Function for send a message
   const sendMessage = async () => {
     if (!input.trim()) return;
 
+    //Create a user message
     const userMessage = { sender: 'user', message: input };
     setMessages([...messages, userMessage]);
 
+    //Create a history
     const history = [...messages, userMessage];
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/chat', {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({history}) //send complete history
@@ -24,6 +29,7 @@ const Chat = () => {
       throw new Error('An error occured');
     }
 
+    //Collect server response
     const data = await response.json();
     const agentMessage = { sender: 'agent', message: data.agent_reply};
 

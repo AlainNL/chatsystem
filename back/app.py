@@ -40,11 +40,6 @@ def chat():
     elif request.method == 'GET':
         return jsonify({"status": "Server run"}), 200
 
-if __name__ == '__main__':
-    # Create WSGI server with Gevent for running multiple concurrent calls
-    http_server = WSGIServer(("127.0.0.1", 5000), app)
-    http_server.serve_forever()
-    app.run(debug=True)
 
 # conditions to validate chat history
 def validate_history(history):
@@ -62,23 +57,35 @@ def validate_history(history):
 
     for message in history:
 
-        # Check that each message is a dictionary with 'sender' and 'message'.
-        if not isinstance(message, dict) or 'sender' not in message or 'message' not in message:
+        # Use is_valid_message function to validate each message
+        if not is_valid_message(message, expected_sender):
             return False
 
-        # Check if key sender is correct
-        if message['sender'] not in ['user', 'agent']:
-            return False
-
-        # Check if message comes from the expected sender
-        if message['sender'] != expected_sender:
-            return False
-
-        # Alternate the expected sender
-        expected_sender = 'agent' if expected_sender == 'user' else 'user'
+    # Alternate the expected sender
+    expected_sender = 'agent' if expected_sender == 'user' else 'user'
 
     return True
+
+def is_valid_message(message, expected_sender):
+    """Check if the message structure is valid and if it comes from the expected sender."""
+    # Check that each message is a dictionary with 'sender' and 'message'.
+    if not isinstance(message, dict) or 'sender' not in message or 'message' not in message:
+        return False
+
+    # Check if key sender is correct
+    if message['sender'] not in ['user', 'agent']:
+        return False
+
+    # Check if message comes from the expected sender
+    return message['sender'] == expected_sender
 
 # Generate static agent response
 def generate_agent_reply():
     return "How can I help you ?"
+
+
+if __name__ == '__main__':
+    # Create WSGI server with Gevent for running multiple concurrent calls
+    http_server = WSGIServer(("127.0.0.1", 5000), app)
+    http_server.serve_forever()
+    app.run(debug=True)
