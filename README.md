@@ -7,8 +7,8 @@
 #Install the requirements
 `pip install -r requirements.txt`
 
-#run Flask server
-`flask run`
+#run Flask with Gevent
+`python app.py`
 
 adress server at "http://127.0.0.1:5000/chat
 
@@ -16,6 +16,9 @@ adress server at "http://127.0.0.1:5000/chat
 
 `cd front`
 `npm install`
-`npm start`
+`npm run start`
 
 run the server at "http://localhost:3000"
+
+### Run API test ###
+`pytest api_test.py`
