@@ -61,8 +61,8 @@ def validate_history(history):
         if not is_valid_message(message, expected_sender):
             return False
 
-    # Alternate the expected sender
-    expected_sender = 'agent' if expected_sender == 'user' else 'user'
+        # Alternate the expected sender
+        expected_sender = 'agent' if expected_sender == 'user' else 'user'
 
     return True
 
